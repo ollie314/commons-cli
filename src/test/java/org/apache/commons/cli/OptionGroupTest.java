@@ -17,15 +17,12 @@
 
 package org.apache.commons.cli;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Properties;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 @SuppressWarnings("deprecation") // tests some deprecated classes
 public class OptionGroupTest
@@ -255,5 +252,35 @@ public class OptionGroupTest
         assertEquals(2, group.getNames().size());
         assertTrue(group.getNames().contains("a"));
         assertTrue(group.getNames().contains("b"));
+    }
+
+    @Test
+    public void testSetSelected()
+    {
+        final OptionGroup group = new OptionGroup();
+        final Option option = OptionBuilder.create("a");
+        group.addOption(option);
+        final Option option2 = OptionBuilder.create("b");
+        group.addOption(option2);
+        assertNull(group.getSelected());
+        try
+        {
+            group.setSelected(option);
+            assertEquals(option.getKey(), group.getSelected());
+        }
+        catch (final AlreadySelectedException e)
+        {
+            fail(String.format("setSelected fails with message [%s]", e.getMessage()));
+        }
+        try
+        {
+            group.setSelected(option2);
+            assertEquals(option2.getKey(), group.getSelected());
+            fail("setSelected should fail since an option has already been selected for this group");
+        }
+        catch (final AlreadySelectedException e)
+        {
+            // it's ok
+        }
     }
 }
