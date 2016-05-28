@@ -148,11 +148,8 @@ public class OptionGroupTest
         assertTrue( "Confirm TWO extra args", cl.getArgList().size() == 2);
     }
 
-    @Test
-    public void testTwoOptionsFromGroup() throws Exception
+    private void doTestTwoOptionsFromGroup(final String[] args) throws Exception
     {
-        String[] args = new String[] { "-f", "-d" };
-
         try
         {
             parser.parse( _options, args);
@@ -167,21 +164,17 @@ public class OptionGroupTest
     }
 
     @Test
+    public void testTwoOptionsFromGroup() throws Exception
+    {
+        String[] args = new String[] { "-f", "-d" };
+        doTestTwoOptionsFromGroup(args);
+    }
+
+    @Test
     public void testTwoLongOptionsFromGroup() throws Exception
     {
         String[] args = new String[] { "--file", "--directory" };
-
-        try
-        {
-            parser.parse(_options, args);
-            fail( "two arguments from group not allowed" );
-        }
-        catch (AlreadySelectedException e)
-        {
-            assertNotNull("null option group", e.getOptionGroup());
-            assertEquals("selected option", "f", e.getOptionGroup().getSelected());
-            assertEquals("option", "d", e.getOption().getOpt());
-        }
+        doTestTwoOptionsFromGroup(args);
     }
 
     @Test
